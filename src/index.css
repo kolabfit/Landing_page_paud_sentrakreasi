@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Nunito:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-light: #F0F9FF;
+  --color-brand-blue: #1a95c4;
+  --color-brand-orange: #f4841b;
+  --color-heading: #0F172A;
+  --color-body: #1E293B;
+  --color-muted: #475569;
+  --color-border-light: #E2E8F0;
+  --color-footer-text: #94A3B8;
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-slate-50 text-body antialiased selection:bg-brand-blue selection:text-white font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-[#64B5F6];
+  }
+  .bg-gradient-orange {
+    @apply bg-gradient-to-r from-brand-orange to-[#FFB74D];
+  }
+  .bg-gradient-blue {
+    @apply bg-gradient-to-r from-brand-blue to-[#64B5F6];
+  }
+  .soft-shadow {
+    @apply shadow-[0_8px_30px_rgb(0,0,0,0.04)];
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
