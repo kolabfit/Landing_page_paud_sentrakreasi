@@ -619,11 +619,6 @@ export default function PageDetail() {
               </p>
             ) : null}
 
-            {/* ── DEBUG OUTPUT (To see raw data) ── */}
-            <div className="mt-32 p-6 bg-slate-900 text-green-400 font-mono text-sm overflow-auto rounded-2xl shadow-2xl">
-              <p className="text-white mb-4 font-bold uppercase tracking-widest border-b border-slate-700 pb-2">🛠 Debug Info (Tolong Foto Bagian Ini)</p>
-              <pre className="whitespace-pre-wrap word-break">{JSON.stringify(page.content, null, 2)}</pre>
-            </div>
           </div>
         ) : (
           <p className="text-muted text-lg font-medium mt-6">
