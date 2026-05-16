@@ -161,7 +161,7 @@ export default function Header() {
               </Link>
             );
           })}
-          {pages.filter(p => !["beranda", "galeri", "gallery", "profil", "profile", "kontak", "berita"].includes(p.title.toLowerCase()) && !p.slug.startsWith("galeri-") && !p.slug.startsWith("gallery-")).map((page) => {
+          {pages.filter(p => !["beranda", "galeri", "gallery", "profil", "profile", "kontak", "berita", "footer"].includes(p.title.toLowerCase()) && !p.slug.startsWith("galeri-") && !p.slug.startsWith("gallery-") && p.slug.toLowerCase() !== "footer").map((page) => {
             const href = `/pages/${page.slug.replace(/^\/+/, "")}`;
             const isActive = location.pathname === href;
             return (
@@ -323,7 +323,7 @@ export default function Header() {
                   </Link>
                 );
               })}
-              {pages.filter(p => !["beranda", "galeri", "gallery", "profil", "profile", "kontak", "berita"].includes(p.title.toLowerCase()) && !p.slug.startsWith("galeri-") && !p.slug.startsWith("gallery-")).map((page) => {
+              {pages.filter(p => !["beranda", "galeri", "gallery", "profil", "profile", "kontak", "berita", "footer"].includes(p.title.toLowerCase()) && !p.slug.startsWith("galeri-") && !p.slug.startsWith("gallery-") && p.slug.toLowerCase() !== "footer").map((page) => {
                 const href = `/pages/${page.slug.replace(/^\/+/, "")}`;
                 const isActive = location.pathname === href;
                 return (

@@ -32,10 +32,35 @@ export default function Contact() {
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSending, setIsSending] = useState(false);
+  const [error, setSubmitError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 5000);
+    setIsSending(true);
+    setSubmitError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      subject: formData.get('subject') as string,
+      message: formData.get('message') as string,
+    };
+
+    try {
+      const { sendInquiry } = await import('../lib/cms');
+      await sendInquiry(data);
+      setIsSubmitted(true);
+      // Reset form after 5 seconds if you want, or just leave success state
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setIsSending(false);
+      }, 7000);
+    } catch (err: any) {
+      setSubmitError(err.message || "Gagal mengirim pesan. Silakan coba lagi nanti.");
+      setIsSending(false);
+    }
   };
 
   if (isLoading) {
@@ -220,15 +245,23 @@ export default function Contact() {
                 </motion.div>
               ) : (
                 <form className="space-y-6" onSubmit={handleSubmit}>
+                  {error && (
+                    <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-2xl text-sm font-bold flex items-center gap-2">
+                       <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                       {error}
+                    </div>
+                  )}
                   <div className="space-y-5">
                     <div>
                       <label htmlFor="name" className="block text-sm font-bold text-heading mb-2 ml-1">Nama Lengkap Orang Tua</label>
                       <input 
                         type="text" 
                         id="name"
+                        name="name"
                         required
-                        className="w-full px-5 py-4 rounded-[20px] border border-blue-50 bg-brand-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all text-base font-medium shadow-inner"
+                        className="w-full px-5 py-4 rounded-[20px] border border-blue-50 bg-brand-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all text-base font-medium shadow-inner disabled:opacity-50"
                         placeholder="Mis. Andini Larasati"
+                        disabled={isSending}
                       />
                     </div>
                     <div>
@@ -236,28 +269,54 @@ export default function Contact() {
                       <input 
                         type="email" 
                         id="email"
+                        name="email"
                         required
-                        className="w-full px-5 py-4 rounded-[20px] border border-blue-50 bg-brand-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all text-base font-medium shadow-inner"
+                        className="w-full px-5 py-4 rounded-[20px] border border-blue-50 bg-brand-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all text-base font-medium shadow-inner disabled:opacity-50"
                         placeholder="anda@email.com"
+                        disabled={isSending}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="subject" className="block text-sm font-bold text-heading mb-2 ml-1">Subjek Pesan</label>
+                      <input 
+                        type="text" 
+                        id="subject"
+                        name="subject"
+                        required
+                        className="w-full px-5 py-4 rounded-[20px] border border-blue-50 bg-brand-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all text-base font-medium shadow-inner disabled:opacity-50"
+                        placeholder="Mis. Pertanyaan Biaya Pendaftaran"
+                        disabled={isSending}
                       />
                     </div>
                     <div>
                       <label htmlFor="message" className="block text-sm font-bold text-heading mb-2 ml-1">Topik Pesan / Pertanyaan</label>
                       <textarea 
                         id="message"
+                        name="message"
                         required
                         rows={4}
-                        className="w-full px-5 py-4 rounded-[20px] border border-blue-50 bg-brand-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all resize-none text-base font-medium shadow-inner"
+                        className="w-full px-5 py-4 rounded-[20px] border border-blue-50 bg-brand-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all resize-none text-base font-medium shadow-inner disabled:opacity-50"
                         placeholder="Ceritakan pertanyaan Anda dengan detail di sini..."
+                        disabled={isSending}
                       ></textarea>
                     </div>
                   </div>
                   <button 
                     type="submit"
-                    className="w-full py-4 text-white bg-brand-orange hover:bg-orange-500 rounded-[20px] font-bold transition-all duration-300 flex items-center justify-center gap-3 mt-8 shadow-[0_10px_20px_-10px_rgba(244,132,27,0.4)] hover:shadow-[0_15px_25px_-10px_rgba(244,132,27,0.5)] hover:-translate-y-1 text-lg group"
+                    disabled={isSending}
+                    className="w-full py-4 text-white bg-brand-orange hover:bg-orange-500 rounded-[20px] font-bold transition-all duration-300 flex items-center justify-center gap-3 mt-8 shadow-[0_10px_20px_-10px_rgba(244,132,27,0.4)] hover:shadow-[0_15px_25px_-10px_rgba(244,132,27,0.5)] hover:-translate-y-1 text-lg group disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    Kirim Pesan Sekarang
-                    <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    {isSending ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Mengirim...
+                      </>
+                    ) : (
+                      <>
+                        Kirim Pesan Sekarang
+                        <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      </>
+                    )}
                   </button>
                 </form>
               )}
@@ -267,5 +326,6 @@ export default function Contact() {
 
       </div>
     </section>
+
   );
 }

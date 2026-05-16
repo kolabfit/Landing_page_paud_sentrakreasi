@@ -482,7 +482,10 @@ export default function PageDetail() {
       .then((items) => {
         if (!isMounted) return;
         const match = (items as CmsPageDetail[]).find(
-          (item) => item.slug.replace(/^\/+/, "").toLowerCase() === slug.toLowerCase(),
+          (item) => 
+            item.slug.replace(/^\/+/, "").toLowerCase() === slug.toLowerCase() &&
+            slug.toLowerCase() !== "footer" &&
+            item.title.toLowerCase() !== "footer"
         );
         if (!match) {
           setError("Halaman tidak ditemukan");
